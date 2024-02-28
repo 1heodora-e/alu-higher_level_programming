@@ -1,1 +1,1 @@
-#This is a file in the root of the directory
+# A file in a root directory
