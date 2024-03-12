@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 '''Defines a Square class'''
 
-
 class Square:
     '''Square represents an instance of a square shape'''
 
@@ -97,5 +96,4 @@ class Square:
 
         print("\n" * self.position[1], end="")
         for i in range(self.size):
-            print(" " * self.position[0] + "#" * self.size)
-
+            print(" " * self.position[0] + "#" * self.sizeg
