@@ -1,43 +1,42 @@
 #!/usr/bin/python3
+'''
+Reading data from stdout
+'''
 import sys
+import re
 
-# Initialize variables
-total_size = 0
-status_counts = {200: 0, 301: 0, 400: 0, 401: 0, 403: 0, 404: 0, 405: 0, 500: 0}
-line_count = 0
 
+def print_data(code_count, total_size):
+    '''
+    Prints data summary
+    '''
+    print("File size: {}".format(total_size))
+    for key, value in sorted(code_count.items()):
+        if value > 0:
+            print("{key}: {value}".format(key=key, value=value))
+
+
+i = 0
+pattern = (r'(\d+\.\d+\.\d+\.\d+) - \[(.*?)\] "GET /projects/(\d+) '
+           r'HTTP/\d\.\d" (\d+) (\d+)')
+status_code_counts = {200: 0, 301: 0, 400: 0, 401: 0,
+                      403: 0, 404: 0, 405: 0, 500: 0}
+total_file_size = 0
 try:
-    # Read stdin line by line
     for line in sys.stdin:
-        # Split line into its components
-        parts = line.split()
-        status_code = int(parts[-2])
-        file_size = int(parts[-1])
+        i += 1
+        match = re.match(pattern, line)
+        if match:
+            ip_address = match.group(1)
+            date = match.group(2)
+            project_id = match.group(3)
+            status_code = match.group(4)
+            file_size = match.group(5)
 
-        # Update total file size
-        total_size += file_size
-
-        # Update status code counts
-        if status_code in status_counts:
-            status_counts[status_code] += 1
-
-        # Increment line count
-        line_count += 1
-
-        # Check if 10 lines have been processed
-        if line_count % 10 == 0:
-            # Print statistics
-            print(f"File size: {total_size}")
-            for code, count in sorted(status_counts.items()):
-                if count > 0:
-                    print(f"{code}: {count}")
-            print()
-
+        status_code_counts[int(status_code)] += 1
+        total_file_size += int(file_size)
+        if i == 10:
+            i = 0
+            print_data(status_code_counts, total_file_size)
 except KeyboardInterrupt:
-    # Handle keyboard interruption
-    print(f"File size: {total_size}")
-    for code, count in sorted(status_counts.items()):
-        if count > 0:
-            print(f"{code}: {count}")
-    sys.exit(0)
-
+    print_data(status_code_counts, total_file_size)
