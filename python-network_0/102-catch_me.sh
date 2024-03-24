@@ -1,3 +1,5 @@
 #!/bin/bash
-# This script sends a request to 0.0.0.0:5000/catch_me using curl
-curl -s -X PUT 0.0.0.0:5000/catch_me -d "You find me!"
+# Script to catch the server's response "You got me!"
+
+curl -sLX PUT 0.0.0.0:5000/catch_me -d "user_id=98" -H "Origin: HolbertonSchool"
+
