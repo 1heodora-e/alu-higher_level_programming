@@ -1,3 +1,3 @@
-#!/bin/bash 
-# display the body of a file 
-curl -sLfG "$1"
+#!/bin/bash
+# sends a GET request to the URL, and displays the body of the response
+curl -sfL "$1"
